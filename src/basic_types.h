@@ -121,6 +121,7 @@ public:
   // number of variables that actually occurs in clauses
   unsigned long num_used_variables_ = 0;
   unsigned long num_free_variables_ = 0;
+  unsigned long num_free_remembered_variables_ = 0;
 
   /// different clause counts
 

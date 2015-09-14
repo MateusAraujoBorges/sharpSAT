@@ -114,6 +114,7 @@ void Instance::compactVariables() {
   vector<unsigned> var_map(variables_.size(), 0);
   unsigned last_ofs = 0;
   unsigned num_isolated = 0;
+  unsigned num_remembered_isolated = 0;
   LiteralIndexedVector<vector<LiteralID> > _tmp_bin_links(1);
   LiteralIndexedVector<TriValue> _tmp_values = literal_values_;
 
@@ -125,11 +126,13 @@ void Instance::compactVariables() {
     if (isActive(v)) {
       if (isolated(v)) {
         num_isolated++;
+        if (remembered(v)) num_remembered_isolated++;
         continue;
       }
       last_ofs++;
       var_map[v] = last_ofs;
     }
+  cout << "Number of free variables among remembered: " << num_remembered_isolated << endl;
 
   // rename any remembered vars accordingly
   set<int> tmp;
@@ -193,6 +196,7 @@ void Instance::compactVariables() {
 
   statistics_.num_used_variables_ = num_variables();
   statistics_.num_free_variables_ = num_isolated;
+  statistics_.num_free_remembered_variables_ = num_remembered_isolated;
 }
 
 void Instance::compactConflictLiteralPool(){

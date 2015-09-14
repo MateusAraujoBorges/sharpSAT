@@ -133,7 +133,9 @@ void Solver::solve(const string &file_name) {
 
 		statistics_.exit_state_ = countSAT();
 
-		cout << "FINAL COUNT: " << stack_.top().getTotalModelCount() << endl;
+		mpz_class proj_count = stack_.top().getTotalModelCount();
+		mpz_mul_2exp(proj_count.get_mpz_t(), proj_count.get_mpz_t(), statistics_.num_free_remembered_variables_);
+		cout << "FINAL COUNT AFTER PROJECTION: " << proj_count << endl;
 
 		statistics_.set_final_solution_count(stack_.top().getTotalModelCount());
 		statistics_.num_long_conflict_clauses_ = num_conflict_clauses();
