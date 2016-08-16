@@ -8,7 +8,40 @@
 #include "component_management.h"
 
 #include <algorithm>
+
+#ifdef __linux__
 #include <sys/sysinfo.h>
+#include <cstdint>
+
+uint64_t freeram() {
+
+  struct sysinfo info;
+      sysinfo(&info);
+
+  return info.freeram *(uint64_t) info.mem_unit;
+}
+
+#elif __APPLE__ && __MACH__
+
+#include <sys/types.h>
+#include <sys/sysctl.h>
+
+
+uint64_t freeram() {
+
+  int mib[2];
+  int64_t physical_memory;
+  mib[0] = CTL_HW;
+  mib[1] = HW_MEMSIZE;
+  size_t length = sizeof(int64_t);
+  sysctl(mib, 2, &physical_memory, &length, NULL, 0);
+
+  return physical_memory;
+}
+
+#else
+#endif
+
 
 ComponentCache::ComponentCache(SolverConfiguration &conf,
 		DataAndStatistics &statistics) :
@@ -27,8 +60,7 @@ void ComponentCache::init() {
 	struct sysinfo info;
 	sysinfo(&info);
 
-	unsigned long long free_ram =
-		info.freeram *(unsigned long long) info.mem_unit;
+	uint64_t free_ram = freeram();
 	unsigned long max_cache_bound = 95 * (free_ram / 100);
 
 	if (config_.maximum_cache_size_bytes == 0) {
