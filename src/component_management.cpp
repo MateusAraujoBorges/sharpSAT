@@ -21,7 +21,7 @@ uint64_t freeram() {
   return info.freeram *(uint64_t) info.mem_unit;
 }
 
-#elif __APPLE__ && __MACH__
+#elif __APPLE__ 
 
 #include <sys/types.h>
 #include <sys/sysctl.h>
@@ -56,9 +56,6 @@ void ComponentCache::init() {
 	table_.resize(900001, NULL);
 	free_entry_base_slots_.clear();
 	free_entry_base_slots_.reserve(10000);
-
-	struct sysinfo info;
-	sysinfo(&info);
 
 	uint64_t free_ram = freeram();
 	unsigned long max_cache_bound = 95 * (free_ram / 100);
