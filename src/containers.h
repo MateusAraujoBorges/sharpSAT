@@ -22,19 +22,11 @@ public:
 			vector<_T>(size * 2, __value) {
 	}
 	inline _T &operator[](const LiteralID lit) {
-	  #ifdef __APPLE__ 
 	  return *(vector<_T>::begin() + lit.raw());
-      #else
-	  return *(vector<_T>::_M_impl._M_start + lit.raw());
-	  #endif
 	}
 
 	inline const _T &operator[](const LiteralID &lit) const {
-	  #ifdef __APPLE__ 
   	  return *(vector<_T>::begin() + lit.raw());
-      #else
-	  return *(vector<_T>::_M_impl._M_start + lit.raw());
-	  #endif
 	}
 
 	inline typename vector<_T>::iterator begin() {
